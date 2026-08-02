@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIGGER · Custom AI Agents — Automate your dev workflow on autopilot</title>
+<meta name="description" content="Custom AI agents for software teams: changelog generation, code review, CI safety guards, reporting automation. Tested, documented, delivered in days. From $300.">
+<style>
+  :root {
+    --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --accent:#7ee787;
+    --accent2:#58a6ff; --border:#30363d; --card:#161b22; --code-bg:#010409;
+    --warn:#d29922; --danger:#f85149;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--fg); line-height:1.65; }
+  code, pre, .mono { font-family:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace; }
+  .container { max-width:1020px; margin:0 auto; padding:0 24px; }
+  a { color:var(--accent2); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* Nav */
+  nav { position:sticky; top:0; z-index:10; background:rgba(13,17,23,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+  nav .container { display:flex; align-items:center; justify-content:space-between; height:56px; }
+  .brand { font-weight:700; font-size:17px; letter-spacing:-.3px; color:var(--fg); }
+  .brand .bolt { color:var(--accent); }
+  nav .links a { color:var(--muted); margin-left:22px; font-size:14px; }
+  nav .links a:hover { color:var(--fg); text-decoration:none; }
+  nav .links .cta-small { color:var(--bg); background:var(--accent); padding:6px 14px; border-radius:6px; font-weight:600; }
+  nav .links .cta-small:hover { background:#5cd975; color:var(--bg); }
+
+  /* Hero */
+  header { padding:88px 0 64px; border-bottom:1px solid var(--border); background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(126,231,135,.09), transparent); }
+  .badge { display:inline-block; padding:4px 12px; background:var(--card); border:1px solid var(--border); border-radius:20px; color:var(--accent); font-size:13px; margin-bottom:18px; }
+  h1 { font-size:44px; line-height:1.15; letter-spacing:-1.2px; margin:0 0 18px; max-width:760px; }
+  h1 .accent { color:var(--accent); }
+  .tagline { font-size:19px; color:var(--muted); max-width:640px; margin:0 0 30px; }
+  .cta-row { display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .cta { display:inline-block; padding:14px 28px; background:var(--accent); color:var(--bg); border-radius:8px; font-weight:600; font-size:16px; }
+  .cta:hover { background:#5cd975; color:var(--bg); text-decoration:none; }
+  .cta.ghost { background:transparent; color:var(--fg); border:1px solid var(--border); }
+  .cta.ghost:hover { border-color:var(--muted); }
+  .proof { display:flex; gap:34px; flex-wrap:wrap; margin-top:44px; padding-top:28px; border-top:1px solid var(--border); }
+  .proof .stat .num { font-size:26px; font-weight:700; color:var(--accent); font-family:"JetBrains Mono",monospace; }
+  .proof .stat .lbl { font-size:13px; color:var(--muted); }
+
+  /* Sections */
+  section { padding:64px 0; border-bottom:1px solid var(--border); }
+  h2 { font-size:30px; letter-spacing:-.6px; margin:0 0 8px; }
+  .sub { color:var(--muted); max-width:620px; margin:0 0 34px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; }
+  .card h3 { margin:0 0 8px; font-size:17px; }
+  .card p { margin:0; color:var(--muted); font-size:14.5px; }
+  .card .tag { display:inline-block; margin-top:12px; font-size:12px; color:var(--accent2); font-family:"JetBrains Mono",monospace; }
+  .card:hover { border-color:#3d454d; }
+
+  /* Case studies */
+  .case { display:grid; grid-template-columns:1fr; gap:14px; }
+  .case-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px 24px; }
+  .case-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .case-head h3 { margin:0; font-size:17px; }
+  .case-bounty { font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--accent); white-space:nowrap; }
+  .case p { margin:8px 0 0; color:var(--muted); font-size:14.5px; }
+  .case .meta { margin-top:10px; font-size:13px; color:var(--muted); }
+  .case .meta code { color:var(--accent2); }
+
+  /* Process */
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; counter-reset:step; }
+  .step { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; position:relative; }
+  .step::before { counter-increment:step; content:"0" counter(step); font-family:"JetBrains Mono",monospace; font-size:22px; font-weight:700; color:var(--accent); display:block; margin-bottom:10px; }
+  .step h3 { margin:0 0 6px; font-size:16px; }
+  .step p { margin:0; color:var(--muted); font-size:14px; }
+
+  /* Pricing */
+  .pricing { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; align-items:stretch; }
+  .plan { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px 26px; display:flex; flex-direction:column; }
+  .plan.featured { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent), 0 8px 30px rgba(126,231,135,.08); }
+  .plan .pname { font-size:14px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); }
+  .plan .amount { font-size:42px; font-weight:700; margin:8px 0 2px; letter-spacing:-1px; }
+  .plan .amount span { font-size:16px; color:var(--muted); font-weight:400; }
+  .plan .per { font-size:13px; color:var(--muted); margin-bottom:18px; }
+  .plan ul { list-style:none; padding:0; margin:0 0 22px; flex:1; }
+  .plan li { padding:6px 0 6px 22px; position:relative; font-size:14.5px; color:var(--fg); }
+  .plan li::before { content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .plan .cta { text-align:center; font-size:15px; padding:12px 18px; }
+  .plan .cta.ghost { color:var(--fg); }
+  .plan.featured .cta { background:var(--accent); }
+
+  /* Guarantee */
+  .guarantee { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:20px 24px; font-size:15px; }
+  .guarantee strong { color:var(--accent); }
+
+  /* Form */
+  .form-wrap { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:30px; max-width:720px; }
+  .form-row { margin-bottom:16px; }
+  .form-row label { display:block; font-size:13.5px; font-weight:600; margin-bottom:6px; color:var(--muted); }
+  .form-row input, .form-row select, .form-row textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:11px 13px; color:var(--fg); font-size:14.5px; font-family:inherit; }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline:none; border-color:var(--accent); }
+  .form-row textarea { min-height:110px; resize:vertical; }
+  .form-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
+  .form-note { font-size:13px; color:var(--muted); margin-top:14px; }
+  .form-note a { color:var(--accent2); }
+
+  /* FAQ */
+  details { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin-bottom:10px; }
+  details summary { cursor:pointer; font-weight:600; font-size:15px; }
+  details p { color:var(--muted); font-size:14.5px; margin:10px 0 0; }
+
+  footer { text-align:center; padding:48px 24px; color:var(--muted); font-size:13.5px; }
+  footer a { color:var(--accent); }
+  .foot-links { margin-bottom:14px; }
+  .foot-links a { margin:0 10px; }
+
+  @media (max-width:640px) {
+    h1 { font-size:32px; }
+    header { padding:56px 0 44px; }
+    nav .links a:not(.cta-small) { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="brand" href="#top"><span class="bolt">⚡</span> TRIGGER — AI Agents</a>
+    <div class="links">
+      <a href="#services">Services</a>
+      <a href="#case-studies">Case studies</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#process">Process</a>
+      <a href="#contact" class="cta-small">Start a project</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="container">
+    <span class="badge">Independent AI agent builder · 51/51 tests passing · Open source</span>
+    <h1>Custom <span class="accent">AI agents</span> that run your dev workflow on autopilot.</h1>
+    <p class="tagline">You bring the workflow. I build the agent — tested, documented, and ready to ship. Changelog generation, code review, CI safety guards, reporting. Delivered in days, not months.</p>
+    <div class="cta-row">
+      <a href="#contact" class="cta">Start a project →</a>
+      <a href="#case-studies" class="cta ghost">See what I've built ↓</a>
+    </div>
+    <div class="proof">
+      <div class="stat"><div class="num">51/51</div><div class="lbl">automated tests passing</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">open-source tools shipped</div></div>
+      <div class="stat"><div class="num">$575</div><div class="lbl">bounty value earned (pending)</div></div>
+      <div class="stat"><div class="num">190</div><div class="lbl">lines merged-ready in SuperPlane PR</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="services">
+  <div class="container">
+    <h2>What I build</h2>
+    <p class="sub">Every agent ships with automated tests, documentation, and a 30-day support window. You're not buying a script — you're buying a tool your team can trust.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Changelog & release agents</h3>
+        <p>Turn messy git history into clean, Keep-a-Changelog-formatted release notes — with breaking-change detection and semver auto-bumps. No more writing changelogs by hand.</p>
+        <span class="tag">bash · git · zero deps</span>
+      </div>
+      <div class="card">
+        <h3>Code review agents</h3>
+        <p>A CLI + GitHub Action that reviews every pull request and posts a structured comment — bugs, style, missing tests — before a human ever looks at it.</p>
+        <span class="tag">Python · GitHub Actions</span>
+      </div>
+      <div class="card">
+        <h3>CI safety guards</h3>
+        <p>Pre-execution hooks that block destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>, force-pushes) before an AI or a tired engineer runs them. Logs every attempt.</p>
+        <span class="tag">Python · hooks · 22/22 tests</span>
+      </div>
+      <div class="card">
+        <h3>Documentation agents</h3>
+        <p>Opinionated CLAUDE.md and project docs generated from your actual codebase — so your AI pair-programmer and new hires start productive on day one.</p>
+        <span class="tag">markdown · templates</span>
+      </div>
+      <div class="card">
+        <h3>Reporting automation</h3>
+        <p>n8n workflows that collect dev activity across repos, summarize it with the Claude API, and deliver a weekly report to Slack or email. Set it once, read it forever.</p>
+        <span class="tag">n8n · Claude API</span>
+      </div>
+      <div class="card">
+        <h3>Custom automations</h3>
+        <p>Your workflow, your tools. Python, bash, n8n, GitHub Actions, webhooks — I wire your stack together into agents that work while you sleep.</p>
+        <span class="tag">Python · bash · n8n · APIs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="case-studies">
+  <div class="container">
+    <h2>Case studies — real tools, real code</h2>
+    <p class="sub">Five production-ready agents built in two days, each one self-contained, tested, and submitted to a public bounty board. These are the actual artifacts — inspect them yourself.</p>
+    <div class="case">
+      <div class="case-item">
+        <div class="case-head"><h3>generate-changelog — release notes on autopilot</h3><span class="case-bounty">$50 bounty</span></div>
+        <p><strong>Problem:</strong> teams skip changelogs because writing them by hand is busywork. <strong>Solution:</strong> one self-contained bash script (7.9 KB, zero dependencies) that reads git history, categorizes commits into Added/Fixed/Changed/Removed, detects breaking changes, and auto-bumps semver from the last tag. Idempotent, refuses to run on a dirty tree, MIT-licensed, works as a Claude Code skill.</p>
+        <div class="meta"><code>TriggerXZ/generate-changelog</code> · live landing page · PR <a href="https://github.com/claude-builders-bounty/claude-builders-bounty/pull/3651" target="_blank">#3651</a></div>
+      </div>
+      <div class="case-item">
+        <div class="case-head"><h3>block-destructive-commands — the AI safety net</h3><span class="case-bounty">$100 bounty</span></div>
+        <p><strong>Problem:</strong> LLM-powered coding tools hallucinate destructive commands. <strong>Solution:</strong> a PreToolUse hook that blocks <code>rm -rf</code>, <code>DROP TABLE</code>, <code>TRUNCATE</code>, <code>DELETE FROM</code> without <code>WHERE</code>, and <code>git push --force</code> — logging every blocked attempt with timestamp and project path. 22/22 automated tests, zero dependencies.</p>
+        <div class="meta"><code>TriggerXZ/block-destructive-commands</code> · PR <a href="https://github.com/claude-builders-bounty/claude-builders-bounty/pull/3652" target="_blank">#3652</a></div>
+      </div>
+      <div class="case-item">
+        <div class="case-head"><h3>claude-review — automated PR reviews</h3><span class="case-bounty">$150 bounty</span></div>
+        <p><strong>Problem:</strong> review queues pile up and bugs slip through. <strong>Solution:</strong> a review agent (Python CLI + GitHub Action) that analyzes every PR and posts a structured comment — issues, suggestions, missing tests — giving humans a head start on every review.</p>
+        <div class="meta"><code>TriggerXZ/claude-review</code> · PR <a href="https://github.com/claude-builders-bounty/claude-builders-bounty/pull/3653" target="_blank">#3653</a></div>
+      </div>
+      <div class="case-item">
+        <div class="case-head"><h3>CLAUDE.md template — onboarding for AI teammates</h3><span class="case-bounty">$75 bounty</span></div>
+        <p><strong>Problem:</strong> AI pair-programmers waste context on projects they don't know. <strong>Solution:</strong> a 1,028-line opinionated CLAUDE.md template for a Next.js 15 + SQLite SaaS — architecture, conventions, commands, testing rules — so any AI tool starts productive on day one.</p>
+        <div class="meta">PR <a href="https://github.com/claude-builders-bounty/claude-builders-bounty/pull/3654" target="_blank">#3654</a></div>
+      </div>
+      <div class="case-item">
+        <div class="case-head"><h3>n8n weekly dev summary — reporting on autopilot</h3><span class="case-bounty">$200 bounty</span></div>
+        <p><strong>Problem:</strong> teams lose the week's signal across repos, PRs, and commits. <strong>Solution:</strong> an n8n workflow (26.7 KB) that gathers dev activity, summarizes it with the Claude API, and delivers a weekly report. Set it once, get the summary every Friday.</p>
+        <div class="meta">PR <a href="https://github.com/claude-builders-bounty/claude-builders-bounty/pull/3655" target="_blank">#3655</a></div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:22px;">Also contributed: <a href="https://github.com/superplanehq/superplane/pull/6474" target="_blank">190-line documentation PR to SuperPlane</a> (open-source control plane for agentic engineering).</p>
+  </div>
+</section>
+
+<section id="process">
+  <div class="container">
+    <h2>How it works</h2>
+    <p class="sub">Four steps, no black box. You see every artifact along the way.</p>
+    <div class="steps">
+      <div class="step"><h3>Discovery</h3><p>A 15-minute call (or chat). You describe the workflow, I map where an agent fits.</p></div>
+      <div class="step"><h3>Proposal</h3><p>Within 48h: scope, deliverables, timeline, fixed price. No surprises.</p></div>
+      <div class="step"><h3>Build & test</h3><p>I build the agent with an automated test suite. You watch progress in the repo.</p></div>
+      <div class="step"><h3>Handover</h3><p>Deployed, documented, with a 30-day support window. Changes? I'm one message away.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <h2>Pricing</h2>
+    <p class="sub">Fixed prices, fixed scope. You pay 50% to start, 50% on delivery. Payments via bank transfer, PayPal, or Ko-fi.</p>
+    <div class="pricing">
+      <div class="plan">
+        <div class="pname">Starter</div>
+        <div class="amount">$300</div>
+        <div class="per">per project · delivered in ~5 days</div>
+        <ul>
+          <li>1 automation agent</li>
+          <li>1 integration (GitHub, Slack, n8n, or similar)</li>
+          <li>Automated tests + documentation</li>
+          <li>30-day support window</li>
+        </ul>
+        <a href="#contact" class="cta ghost">Start a project</a>
+      </div>
+      <div class="plan featured">
+        <div class="pname">Standard</div>
+        <div class="amount">$700</div>
+        <div class="per">per project · delivered in ~7 days</div>
+        <ul>
+          <li>Up to 3 agents or integrations</li>
+          <li>Multi-step workflow automation</li>
+          <li>Custom configuration & deployment</li>
+          <li>Automated tests + documentation</li>
+          <li>60-day support window</li>
+        </ul>
+        <a href="#contact" class="cta">Start a project</a>
+      </div>
+      <div class="plan">
+        <div class="pname">Premium</div>
+        <div class="amount">$1,500</div>
+        <div class="per">per project · delivered in ~2 weeks</div>
+        <ul>
+          <li>Full workflow automation (multi-tool)</li>
+          <li>Agents + reporting + safety guards</li>
+          <li>Custom integrations & UI if needed</li>
+          <li>Team training session (1h)</li>
+          <li>90-day support window</li>
+        </ul>
+        <a href="#contact" class="cta ghost">Start a project</a>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:20px">Every deliverable ships with automated tests. If it doesn't pass, I keep working — free.</p>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <h2>Start a project</h2>
+    <p class="sub">Tell me what's eating your team's time. I'll reply within 24 hours with honest feedback on whether an agent is the right fix — and if it's not, I'll tell you that too.</p>
+    <div class="form-wrap">
+      <div class="form-row">
+        <label for="f-name">Your name *</label>
+        <input id="f-name" type="text" placeholder="Jane Doe">
+      </div>
+      <div class="form-row">
+        <label for="f-email">Email *</label>
+        <input id="f-email" type="email" placeholder="jane@company.com">
+      </div>
+      <div class="form-row">
+        <label for="f-company">Company / website (optional)</label>
+        <input id="f-company" type="text" placeholder="acme.io">
+      </div>
+      <div class="form-row">
+        <label for="f-problem">What would you like automated? *</label>
+        <textarea id="f-problem" placeholder="e.g. Every week someone spends 3 hours compiling release notes and PR summaries. We use GitHub and Slack, and I'd like it delivered every Friday."></textarea>
+      </div>
+      <div class="form-row">
+        <label for="f-budget">Budget</label>
+        <select id="f-budget">
+          <option value="$300 (Starter)">$300 (Starter)</option>
+          <option value="$700 (Standard)" selected>$700 (Standard)</option>
+          <option value="$1,500 (Premium)">$1,500 (Premium)</option>
+          <option value="Not sure yet">Not sure yet</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="cta" onclick="sendWhatsApp()">Send via WhatsApp</button>
+        <button class="cta ghost" onclick="sendEmail()">Send via email</button>
+      </div>
+      <p class="form-note">Prefer email? Write to <a href="mailto:kaminatrigger@gmail.com">kaminatrigger@gmail.com</a> directly. All inquiries answered within 24h.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <h2>FAQ</h2>
+    <details open>
+      <summary>What exactly counts as an "agent"?</summary>
+      <p>Anything that takes a repetitive workflow and runs it without a human in the loop: a script that generates release notes, a hook that blocks dangerous commands, a workflow that summarizes the week, a bot that reviews pull requests. If it has inputs, logic, and outputs — it can probably be an agent.</p>
+    </details>
+    <details>
+      <summary>How do I know it actually works?</summary>
+      <p>Every deliverable ships with an automated test suite — the same way I build my own tools (51/51 tests passing across 7 repos). You can run the tests yourself before you accept the project. No trust required, just <code>pytest</code>.</p>
+    </details>
+    <details>
+      <summary>What if I need changes after delivery?</summary>
+      <p>Every plan includes a support window (30/60/90 days). Small tweaks are free within that window. Bigger changes get a quote — usually cheaper than a new project since the foundation already exists.</p>
+    </details>
+    <details>
+      <summary>Do you sign NDAs?</summary>
+      <p>Yes. I'm a solo builder, but I work like a professional: NDA available on request, no sharing of your code or data, and everything you pay for is 100% yours.</p>
+    </details>
+    <details>
+      <summary>What's your stack?</summary>
+      <p>Python, bash, JavaScript, n8n, GitHub Actions, the Claude API, and whatever your stack requires. I've shipped zero-dependency bash tools and multi-step n8n workflows — I adapt to your tools, not the other way around.</p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-links">
+    <a href="https://github.com/TriggerXZ" target="_blank">GitHub</a>
+    <a href="https://ko-fi.com/trigger68510" target="_blank">Ko-fi</a>
+    <a href="https://triggerxz.github.io/generate-changelog/" target="_blank">generate-changelog</a>
+    <a href="https://github.com/TriggerXZ/block-destructive-commands" target="_blank">block-destructive-commands</a>
+  </div>
+  Built by Dante (TriggerXZ) · Colombia · English & español · Open-source at <a href="https://github.com/TriggerXZ" target="_blank">github.com/TriggerXZ</a>
+</footer>
+
+<script>
+function buildMessage() {
+  var name = document.getElementById('f-name').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var company = document.getElementById('f-company').value.trim();
+  var problem = document.getElementById('f-problem').value.trim();
+  var budget = document.getElementById('f-budget').value;
+  if (!name || !email || !problem) { alert('Please fill in your name, email, and the problem you want automated.'); return null; }
+  var lines = [
+    'Hi! I want to start a project.',
+    '',
+    'Name: ' + name,
+    'Email: ' + email,
+    company ? 'Company: ' + company : '',
+    'Budget: ' + budget,
+    '',
+    'What to automate:',
+    problem
+  ].filter(function(l){ return l !== ''; });
+  return lines.join('\n');
+}
+function sendWhatsApp() {
+  var msg = buildMessage();
+  if (!msg) return;
+  var url = 'https://wa.me/573507064983?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+function sendEmail() {
+  var msg = buildMessage();
+  if (!msg) return;
+  var url = 'mailto:kaminatrigger@gmail.com?subject=' + encodeURIComponent('Project inquiry — AI agent') + '&body=' + encodeURIComponent(msg);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>
