@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIGGER · AI Agent Templates — tested automation, buy once</title>
+<meta name="description" content="Buy tested, documented AI agent templates: changelog generation, CI safety hooks, PR review, CLAUDE.md, n8n reporting. $9-$49, one-time purchase, open code.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://triggerxz.github.io/ai-agents-service/templates/">
+<meta property="og:title" content="TRIGGER · AI Agent Templates">
+<meta property="og:description" content="Tested, documented AI agent templates. Buy once, keep the code. $9-$49.">
+<meta property="og:image" content="https://triggerxz.github.io/ai-agents-service/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TRIGGER · AI Agent Templates">
+<meta name="twitter:description" content="Tested, documented AI agent templates. Buy once, keep the code. $9-$49.">
+<style>
+  :root {
+    --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --accent:#7ee787;
+    --accent2:#58a6ff; --border:#30363d; --card:#161b22;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--fg); line-height:1.6; }
+  code { font-family:"JetBrains Mono","SFMono-Regular",Consolas,monospace; background:#010409; padding:2px 6px; border-radius:4px; font-size:.9em; }
+  .container { max-width:980px; margin:0 auto; padding:0 24px; }
+  a { color:var(--accent2); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  nav { position:sticky; top:0; z-index:10; background:rgba(13,17,23,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+  nav .container { display:flex; align-items:center; justify-content:space-between; height:56px; }
+  .brand { font-weight:700; color:var(--fg); }
+  .brand .bolt { color:var(--accent); }
+  nav .links a { color:var(--muted); margin-left:20px; font-size:14px; }
+  nav .links a:hover { color:var(--fg); text-decoration:none; }
+
+  header { padding:72px 0 48px; border-bottom:1px solid var(--border); background:radial-gradient(ellipse 70% 55% at 50% -10%, rgba(126,231,135,.08), transparent); }
+  .badge { display:inline-block; padding:4px 12px; background:var(--card); border:1px solid var(--border); border-radius:20px; color:var(--accent); font-size:13px; margin-bottom:16px; }
+  h1 { font-size:40px; letter-spacing:-1px; margin:0 0 14px; }
+  h1 .accent { color:var(--accent); }
+  .tagline { font-size:18px; color:var(--muted); max-width:640px; margin:0 0 8px; }
+  .note { font-size:14px; color:var(--muted); }
+
+  section { padding:56px 0; border-bottom:1px solid var(--border); }
+  h2 { font-size:28px; margin:0 0 26px; letter-spacing:-.5px; }
+  .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
+  .product { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:26px; display:flex; flex-direction:column; }
+  .product:hover { border-color:#3d454d; }
+  .product .picon { font-size:26px; }
+  .product h3 { margin:10px 0 6px; font-size:18px; }
+  .product .pdesc { color:var(--muted); font-size:14px; flex:1; margin:0 0 14px; }
+  .product .pmeta { font-size:12.5px; color:var(--muted); font-family:monospace; margin-bottom:16px; }
+  .product .pmeta span { margin-right:10px; }
+  .product .price-row { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px; }
+  .product .price { font-size:28px; font-weight:700; color:var(--accent); font-family:"JetBrains Mono",monospace; }
+  .product .price small { font-size:13px; color:var(--muted); font-weight:400; }
+  .product .buy { display:block; text-align:center; padding:11px 16px; border-radius:8px; font-weight:600; font-size:14.5px; background:var(--accent); color:var(--bg); margin-bottom:8px; }
+  .product .buy:hover { background:#5cd975; color:var(--bg); text-decoration:none; }
+  .product .custom { display:block; text-align:center; padding:10px 16px; border-radius:8px; font-size:14px; border:1px solid var(--border); color:var(--fg); }
+  .product .custom:hover { border-color:var(--muted); text-decoration:none; }
+
+  .bundle { background:var(--card); border:1px solid var(--accent); border-radius:12px; padding:28px; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .bundle h3 { margin:0 0 6px; font-size:20px; }
+  .bundle p { margin:0; color:var(--muted); font-size:14.5px; max-width:520px; }
+  .bundle .price { font-size:34px; font-weight:700; color:var(--accent); font-family:"JetBrains Mono",monospace; }
+  .bundle .price small { font-size:14px; color:var(--muted); font-weight:400; text-decoration:line-through; }
+  .bundle a { display:inline-block; background:var(--accent); color:var(--bg); padding:12px 22px; border-radius:8px; font-weight:600; }
+  .bundle a:hover { background:#5cd975; text-decoration:none; }
+
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:10px; }
+  .step { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; font-size:14px; }
+  .step b { color:var(--accent); display:block; margin-bottom:4px; }
+
+  details { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin-bottom:10px; }
+  details summary { cursor:pointer; font-weight:600; font-size:15px; }
+  details p { color:var(--muted); font-size:14px; margin:8px 0 0; }
+
+  footer { text-align:center; padding:44px 24px; color:var(--muted); font-size:13.5px; }
+  footer a { color:var(--accent); }
+
+  @media (max-width:640px) { h1 { font-size:30px; } nav .links a { margin-left:12px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="brand" href="/ai-agents-service/"><span class="bolt">⚡</span> TRIGGER — AI Agents</a>
+    <div class="links">
+      <a href="/ai-agents-service/">Service</a>
+      <a href="/ai-agents-service/templates/">Templates</a>
+      <a href="https://ko-fi.com/trigger68510" target="_blank">Ko-fi</a>
+      <a href="https://github.com/TriggerXZ" target="_blank">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <span class="badge">Buy once · Keep the code · MIT-friendly · Tested</span>
+    <h1>AI Agent <span class="accent">Templates</span></h1>
+    <p class="tagline">The exact agents I build for clients — productized as drop-in templates. Every one ships with tests, docs, and zero vendor lock-in.</p>
+    <p class="note">Buying a template = you get the full source, configure it for your stack, run it forever. Need it customized? <a href="/ai-agents-service/#contact">Hire me to tailor it</a>.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <h2>The collection</h2>
+    <div class="products">
+
+      <div class="product">
+        <div class="picon">📦</div>
+        <h3>generate-changelog</h3>
+        <p class="pdesc">One bash script, full Keep-a-Changelog CHANGELOG.md from your git history. Breaking-change detection, semver auto-bump, zero dependencies. Drop into CI and never write release notes again.</p>
+        <p class="pmeta">bash · git · zero deps · works in CI</p>
+        <div class="price-row"><span class="price">$9<small> USD</small></span><span style="color:var(--muted);font-size:13px">one-time</span></div>
+        <a class="buy" href="https://ko-fi.com/trigger68510" target="_blank">Buy on Ko-fi</a>
+        <a class="custom" href="/ai-agents-service/#contact">Customize for my stack →</a>
+      </div>
+
+      <div class="product">
+        <div class="picon">🧠</div>
+        <h3>AI Onboarding Pack</h3>
+        <p class="pdesc">The 1,028-line opinionated CLAUDE.md template. Point your AI pair-programmer at a project and it starts with full context: architecture, conventions, commands, testing rules. For Next.js + SQLite SaaS (adaptable).</p>
+        <p class="pmeta">markdown · template · 1,028 lines</p>
+        <div class="price-row"><span class="price">$9<small> USD</small></span><span style="color:var(--muted);font-size:13px">one-time</span></div>
+        <a class="buy" href="https://ko-fi.com/trigger68510" target="_blank">Buy on Ko-fi</a>
+        <a class="custom" href="/ai-agents-service/#contact">Customize for my project →</a>
+      </div>
+
+      <div class="product">
+        <div class="picon">🛡️</div>
+        <h3>block-destructive-commands</h3>
+        <p class="pdesc">PreToolUse hook that stops <code>rm -rf</code>, <code>DROP TABLE</code>, <code>TRUNCATE</code>, <code>DELETE FROM</code> without WHERE, and <code>git push --force</code> before they run. Logs every attempt. 22/22 tests.</p>
+        <p class="pmeta">python · hooks · 22/22 tests</p>
+        <div class="price-row"><span class="price">$14<small> USD</small></span><span style="color:var(--muted);font-size:13px">one-time</span></div>
+        <a class="buy" href="https://ko-fi.com/trigger68510" target="_blank">Buy on Ko-fi</a>
+        <a class="custom" href="/ai-agents-service/#contact">Customize for my team →</a>
+      </div>
+
+      <div class="product">
+        <div class="picon">🔍</div>
+        <h3>claude-review</h3>
+        <p class="pdesc">Automated PR review agent: CLI + GitHub Action that analyzes every pull request and posts a structured comment — bugs, style, missing tests — before a human opens it.</p>
+        <p class="pmeta">python · github actions · CLI</p>
+        <div class="price-row"><span class="price">$24<small> USD</small></span><span style="color:var(--muted);font-size:13px">one-time</span></div>
+        <a class="buy" href="https://ko-fi.com/trigger68510" target="_blank">Buy on Ko-fi</a>
+        <a class="custom" href="/ai-agents-service/#contact">Customize for my team →</a>
+      </div>
+
+      <div class="product">
+        <div class="picon">📊</div>
+        <h3>Weekly Dev Summary</h3>
+        <p class="pdesc">n8n workflow that gathers the week's dev activity across your repos and delivers a Claude-written report to Slack/email every Friday. Set it once, read it forever.</p>
+        <p class="pmeta">n8n · claude api · 26.7 KB</p>
+        <div class="price-row"><span class="price">$29<small> USD</small></span><span style="color:var(--muted);font-size:13px">one-time</span></div>
+        <a class="buy" href="https://ko-fi.com/trigger68510" target="_blank">Buy on Ko-fi</a>
+        <a class="custom" href="/ai-agents-service/#contact">Customize for my repos →</a>
+      </div>
+
+      <div class="product">
+        <div class="picon">🪄</div>
+        <h3>Custom build</h3>
+        <p class="pdesc">None of these fit? I'll build an agent for your exact workflow — tested, documented, delivered in days. Fixed price, you keep the code.</p>
+        <p class="pmeta">python · bash · n8n · APIs</p>
+        <div class="price-row"><span class="price">$300<small>+ USD</small></span><span style="color:var(--muted);font-size:13px">per project</span></div>
+        <a class="buy" href="/ai-agents-service/#contact">Start a project</a>
+      </div>
+
+    </div>
+
+    <div class="bundle" style="margin-top:26px;">
+      <div>
+        <h3>🎁 Full Collection — all 5 templates</h3>
+        <p>Changelog + AI onboarding + safety hook + PR review + weekly summary. Everything I ship, in one bundle, for less than a custom build costs in an hour.</p>
+      </div>
+      <div>
+        <div class="price"><small>$85</small> $49 <small style="font-size:12px">USD</small></div>
+        <a href="https://ko-fi.com/trigger68510" target="_blank" style="margin-top:10px;">Get the bundle</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Why buy a template</h2>
+    <div class="steps">
+      <div class="step"><b>1 · Instant</b>No meetings, no scoping calls. Download, configure, run.</div>
+      <div class="step"><b>2 · Tested</b>Every template has an automated test suite. You can run it yourself before using it.</div>
+      <div class="step"><b>3 · Yours forever</b>Full source, no subscription, no lock-in. Modify it freely.</div>
+      <div class="step"><b>4 · Upgradable</b>Buy a template, then hire me to customize it — you get the discount applied.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>FAQ</h2>
+    <details open>
+      <summary>How do I get the template after buying?</summary>
+      <p>Ko-fi delivers the file download link automatically after payment — usually within a minute. It includes the full source, README, and test suite.</p>
+    </details>
+    <details>
+      <summary>Are these really the same agents you build for clients?</summary>
+      <p>Yes — identical cores. Client work adds custom configuration, integrations, and support; the template is the engine, configured for a generic setup.</p>
+    </details>
+    <details>
+      <summary>What license?</summary>
+      <p>Each template includes a permissive license (MIT-style). Use it in commercial projects, modify it, ship it. Just don't resell the template itself.</p>
+    </details>
+    <details>
+      <summary>Can I get a refund?</summary>
+      <p>Digital products are final sale, but if a template is broken or doesn't work as documented, I'll fix it or refund — no questions asked. Contact me directly.</p>
+    </details>
+    <details>
+      <summary>Do you take custom work too?</summary>
+      <p>Yes — <a href="/ai-agents-service/#contact">start here</a>. $300-$1,500 fixed price, 50/50 payment, you keep the code.</p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="/ai-agents-service/">Service</a> · <a href="/ai-agents-service/templates/">Templates</a> · <a href="https://github.com/TriggerXZ" target="_blank">GitHub</a> · <a href="https://ko-fi.com/trigger68510" target="_blank">Ko-fi</a>
+  </div>
+  <p style="margin:10px 0 0">Built by Dante (TriggerXZ) · Colombia · English & español</p>
+</footer>
+</body>
+</html>
